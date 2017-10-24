@@ -1,41 +1,36 @@
-apply plugin: 'com.android.library'
-apply from: 'https://raw.githubusercontent.com/shamanland/gradle-mvn-push/master/gradle-mvn-push.gradle' //contains fix for javadoc issues
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
 
-
-android {
-
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
-    buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-
-    defaultConfig {
-        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
-        targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
-        versionName project.VERSION_NAME
-        versionCode Integer.parseInt(project.VERSION_CODE)
+buildscript {
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+        maven { url 'https://jitpack.io' }
     }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.2.3'
+        // to auto install sdk components when building see #248
+        // classpath 'com.jakewharton.sdkmanager:gradle-plugin:0.12.+'
+        classpath 'com.github.plastiv:sdk-manager-plugin:b04aea1cddf87e78db9a4372794d678f9e568c48'
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-        }
-    }
 
-    sourceSets {
-        main {
-            assets {
-                srcDir 'assets'
-            }
-        }
-    }
-
-    lintOptions {
-        abortOnError false
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
     }
 }
 
-dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
-    compile 'com.nineoldandroids:library:2.4.0'
-    compile 'com.android.support:appcompat-v7:25.0.1'
+allprojects {
+
+    version = VERSION_NAME
+    group = GROUP
+    repositories {
+        jcenter()
+        mavenLocal()
+        mavenCentral()
+    }
+    apply plugin: 'android-sdk-manager' //see #248
+}
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '3.2'
 }
